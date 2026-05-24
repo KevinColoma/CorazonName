@@ -100,7 +100,7 @@
         // ============================================
         let gyroAccess = false;
         let gyroData = { x: 0, y: 0, z: 0 };
-        const GYRO_STRENGTH = 0.15; // Intensidad del efecto (0.1-0.3 recomendado)
+        const GYRO_STRENGTH = 0.35; // Intensidad del efecto (0.1-0.3 recomendado)
 
         function requestGyroPermission() {
             if (isMobile && typeof DeviceOrientationEvent !== 'undefined') {
@@ -249,7 +249,14 @@
         function getHeartPoint(t) {
             let x = 16 * Math.pow(Math.sin(t), 3);
             let y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-            return { x: x * HEART_SIZE, y: y * HEART_SIZE };
+            
+            // Escalar el corazón para que se ajuste dentro de la pantalla
+            let scale = Math.min(width, height) / 600; // Reducido más para márgenes cómodos
+            
+            return { 
+                x: x * HEART_SIZE * scale, 
+                y: y * HEART_SIZE * scale 
+            };
         }
 
         function getTextPoints(text) {
@@ -325,6 +332,7 @@
                 ctx.scale(dpr, dpr);
             }
             
+            // Recalcular destinos para que el corazón sea responsive
             calculateDestinations();
         }
 
@@ -364,8 +372,12 @@
                 }
             }, { passive: true });
             
-            // Reiniciar: doble click en ambos (desktop y mobile)
-            window.addEventListener('dblclick', resetAnimation, { passive: true });
+            // Reiniciar: doble click en desktop, single click/tap en mobile
+            if (isMobile) {
+                window.addEventListener('dblclick', resetAnimation, { passive: true });
+            } else {
+                window.addEventListener('click', resetAnimation, { passive: true });
+            }
             
             animate();
         }
