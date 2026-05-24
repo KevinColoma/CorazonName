@@ -72,6 +72,7 @@
         let PARTICLE_COUNT = 1500;
         let ANIMATION_FPS = 60;
         let MOUSE_RADIUS = 100;
+        let TOUCH_RADIUS = 50; // Radio específico para móviles (más pequeño)
         let RETURN_SPEED = 0.05;
         let VELOCITY_LIMIT = 8;
         let HEART_SIZE = 18;
@@ -87,12 +88,12 @@
                 PARTICLE_COUNT = 1000;
                 ANIMATION_FPS = 45;
             }
-            MOUSE_RADIUS = 80;
+            MOUSE_RADIUS = TOUCH_RADIUS; // Usar radio más pequeño en móviles
             RETURN_SPEED = 0.04;
         }
 
         const NOMBRE = "MELANIE"; // <--- CAMBIA EL NOMBRE AQUÍ
-        const DURATIONS = [2000, 5000, 2000, 1000000];
+        const DURATIONS = [3000, 8000, 3000, 1000000];
 
         // ============================================
         // GIROSCOPIO Y ORIENTACIÓN DEL DISPOSITIVO
@@ -363,9 +364,8 @@
                 }
             }, { passive: true });
             
-            // Reiniciar con click/tap
-            window.addEventListener('click', resetAnimation, { passive: true });
-            window.addEventListener('touchstart', resetAnimation, { passive: true });
+            // Reiniciar: doble click en ambos (desktop y mobile)
+            window.addEventListener('dblclick', resetAnimation, { passive: true });
             
             animate();
         }
